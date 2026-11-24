@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: #b1a191;
+}
+
+.introduction {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;   /* clips the image so it can't spill into <main> */
+}
+
+.vines {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.pagetop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(63, 136, 205, 0.8);
+    width: 600px;
+    height: 250px;
+}
+
+.title {
+    text-align: center;
+    color: #fff;
+    font-family: fantasy;
+}
+
+.byline {
+        font-family: fantasy;
+        color: #fff;
+        margin-top: 10px;
+}
+
+.startgraf {
+    width: 800px;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    position: relative;
+}
