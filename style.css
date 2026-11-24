@@ -3,6 +3,22 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4ede0;
+    color: #2a2331;
+    transition: background-color 1.5s ease, color 1.5s ease;
+}
+
+body.adventure-started {
+    background-color: #2a2331;
+    color: #f0e6d2;
+}
+
+
 header {
     position: relative;
     width: 100%;
@@ -51,10 +67,88 @@ header {
         margin-top: 10px;
 }
 
+#music-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    font-size: 24px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(42, 46, 96, 0.8);
+    color: #fff;
+    cursor: pointer;
+}
+
+.START {
+    position: static;        /* normal flow, below the header */
+}
+
 .startgraf {
-    width: 800px;
+    position: static;        /* no absolute/relative offsets */
+    margin: 40px auto;       /* space above, centered horizontally */
+    max-width: 700px;
+    padding: 0 20px;
+}
+
+.startgraf p {
+    font-family: fantasy;
+    line-height: 1.6;
+}
+
+.button {
     display: flex;
-    top: 50%;
-    left: 50%;
-    position: relative;
+    justify-content: center;
+    margin: 40px;
+}
+
+#start-btn {
+    margin-top: 24px;
+    padding: 28px 58px;
+    font-family: fantasy;
+    font-size: 2.0rem;
+    color: #fff;
+    background-color: #533728;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#start-btn:hover {
+    background-color: #c08a5b;
+    transform: scale(1.05); 
+}
+
+#music-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+    padding: 10px 14px;
+    font-size: 24px;
+    color: #fff;
+    background-color: #533728;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.Tavern {
+    min-height: 100vh;       /* room to scroll so .tavernintro lands at the top */
+    padding-top: 40px;
+}
+
+.tavernintro {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.tavernintro p {
+    font-family: fantasy;
+    line-height: 1.6;
 }
