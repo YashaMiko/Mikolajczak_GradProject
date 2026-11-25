@@ -1,70 +1,101 @@
-const music = document.getElementById("bgm");
-const toggle = document.getElementById("music-toggle");
-const startBtn = document.getElementById("start-btn");
+document.addEventListener("DOMContentLoaded", () => {
+    const music = document.getElementById("bgm");
+    const toggle = document.getElementById("music-toggle");
+    const startBtn = document.getElementById("start-btn");
+    const tavern = document.querySelector(".Tavern");
 
-const TARGET_VOLUME = 0.4;   // max volume (0 to 1)
-const FADE_MS = 2000;        // fade duration in milliseconds
+    const TARGET_VOLUME = 0.4;
+    const FADE_MS = 2000;
 
-let fadeTimer = null;
-let started = false;         // becomes true once the button is pressed
+    let fadeTimer = null;
+    let started = false;
 
-function fadeTo(target, duration, onDone) {
-    clearInterval(fadeTimer);
-    const steps = 40;
-    const stepTime = duration / steps;
-    const delta = (target - music.volume) / steps;
+    function fadeTo(target, duration, onDone) {
+        if (!music) return;
+        clearInterval(fadeTimer);
+        const steps = 40;
+        const stepTime = duration / steps;
+        const delta = (target - music.volume) / steps;
 
-    fadeTimer = setInterval(() => {
-        const next = music.volume + delta;
-        music.volume = Math.min(1, Math.max(0, next));
-
-        if ((delta > 0 && music.volume >= target) ||
-            (delta < 0 && music.volume <= target)) {
-            music.volume = target;
-            clearInterval(fadeTimer);
+        if (delta === 0) {
             if (onDone) onDone();
+            return;
         }
-    }, stepTime);
-}
 
-function fadeIn() {
-    music.volume = 0;
-    music.play().then(() => {
-        toggle.textContent = "🔊";
-        fadeTo(TARGET_VOLUME, FADE_MS);
-    }).catch(() => {
-        toggle.textContent = "🔇";
-    });
-}
+        fadeTimer = setInterval(() => {
+            music.volume = Math.min(1, Math.max(0, music.volume + delta));
+            if ((delta > 0 && music.volume >= target) ||
+                (delta < 0 && music.volume <= target)) {
+                music.volume = target;
+                clearInterval(fadeTimer);
+                if (onDone) onDone();
+            }
+        }, stepTime);
+    }
 
-function fadeOut() {
-    fadeTo(0, FADE_MS, () => {
-        music.pause();
-        toggle.textContent = "🔇";
-    });
-}
+    function fadeIn() {
+        if (!music) return;
+        music.volume = 0;
+        music.play().then(() => {
+            if (toggle) toggle.textContent = "🔊";
+            fadeTo(TARGET_VOLUME, FADE_MS);
+        }).catch(() => {
+            if (toggle) toggle.textContent = "🔇";
+        });
+    }
 
-// "Start the adventure!": music fades in, background changes, page scrolls
-startBtn.addEventListener("click", () => {
-    started = true;
-    fadeIn();
+    function fadeOut() {
+        fadeTo(0, FADE_MS, () => {
+            music.pause();
+            if (toggle) toggle.textContent = "🔇";
+        });
+    }
 
-    document.body.classList.add("adventure-started");
+    startBtn.addEventListener("click", () => {
+        if (started) return;
+        started = true;
 
-    document.querySelector(".tavernintro").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+        // Show the tavern first, then fade it in
+        tavern.classList.add("active");
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => tavern.classList.add("visible"));
+        });
 
-    startBtn.style.visibility = "hidden";
-});
+        document.body.classList.add("adventure-started");
+        tavern.scrollIntoView({ behavior: "smooth", block: "start" });
+        startBtn.style.visibility = "hidden";
 
-// Mute/unmute toggle (only works after the adventure has started)
-toggle.addEventListener("click", () => {
-    if (!started) return;
-    if (music.paused) {
         fadeIn();
-    } else {
-        fadeOut();
+    });
+
+    if (toggle) {
+        toggle.addEventListener("click", () => {
+            if (!started || !music) return;
+            if (music.paused) {
+                fadeIn();
+            } else {
+                fadeOut();
+            }
+        });
+    }
+
+    // ---------- Click-to-flip character cards ----------
+    const characters = document.querySelector(".characters");
+
+    if (characters) {
+        characters.addEventListener("click", (e) => {
+            const card = e.target.closest(".card");
+            if (card) card.classList.toggle("flipped");
+        });
+
+        // Keyboard support: Enter or Space flips the focused card
+        characters.addEventListener("keydown", (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            const card = e.target.closest(".card");
+            if (card) {
+                e.preventDefault();
+                card.classList.toggle("flipped");
+            }
+        });
     }
 });
